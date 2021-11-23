@@ -44,6 +44,7 @@ export default function Home(){
   const winSize = useWindowSize()
   const router = useRouter()
   const [isLoading, setIsLoading] = React.useState(false)
+  const [name, setName] = React.useState('')
   const [htmlForm, setHtmlForm] = React.useState({})
   const [cssForm, setCssForm] = React.useState({})
   const [jsForm, setJsForm] = React.useState({})
@@ -54,6 +55,7 @@ export default function Home(){
 
     const result = await set(ref(db, 'interviews/'), {
       DATE: dayjs().format('YYYY/MM/DD HH:mm:ss'),
+      NAME: name,
       html: htmlForm,
       css: cssForm,
       js: jsForm,
@@ -66,14 +68,20 @@ export default function Home(){
 
   }
 
-  React.useEffect(()=>{
-    window.dayjs = dayjs
-  }, [])
+  return (<form
+  onSubmit={(e)=>{
+    e.preventDefault()
+    submit().then((r)=>{
 
-  return (<>
+    })
+    .catch((error) => {
+      console.error(error)
+    })
+  }}>
     <div className={`w-full h-full left-0 top-0 fixed z-50 flex justify-center items-center text-white text-[21px] ${isLoading ?'block' :'hidden'}`} style={{ background:'rgba(0,0,0,0.8)' }}>
       ....NOW LOADING...
     </div>
+
     <div className={`w-full h-full left-0 top-0 fixed z-50 flex flex-col flex-nowrap justify-center bg-white px-20 ${showResultScreen ?'block' :'hidden'}`}>
       <div className="pl-5" style={{borderLeft: 'solid 3px #da3932'}}>
         <img className="relative" src="assets/img/logo.svg" style={{width:'40px', top:'-4px'}}/>
@@ -88,14 +96,26 @@ export default function Home(){
         </div>
       </div>
     </div>
-    <div className="container my-8">
-      <div className="row row-gap-0 items-center">
-        <div className="col-auto">
-          <div className="w-9 h-9 rounded-full flex justify-center items-center overflow-hidden">
-            <img src="assets/img/logo.svg"/>
+
+    <div className="bg-grey-400 py-8 mb-8">
+      <div className="container mb-4">
+        <div className="row row-gap-0 items-center">
+          <div className="col-auto">
+            <div className="w-9 h-9 rounded-full flex justify-center items-center overflow-hidden">
+              <img src="assets/img/logo.svg"/>
+            </div>
           </div>
+          <h1 className="text-[24px] font-500 pl-2">JGB 前端技能調查</h1>
         </div>
-        <h1 className="text-[24px] font-500 pl-2">JGB 前端技能調查</h1>
+      </div>
+
+      <div className="container">
+        <div className="mb-1">受訪人姓名</div>
+        <input className="border border-gray-400 !h-[40px] rounded max-w-[237px]" type="text" required
+        value={name}
+        onChange={(e)=>{
+          setName(e.target.value)
+        }}/>
       </div>
     </div>
 
@@ -128,7 +148,6 @@ export default function Home(){
         )
       })
     }
-
 
     <div className="container mb-4">
       <div className="text-[20px] font-500">CSS</div>
@@ -275,17 +294,9 @@ export default function Home(){
     }
 
     <div className="flex justify-center pb-8">
-      <div className="rounded bg-main text-white py-2 px-6 hover:bg-main-700 cursor-pointer font-500"
-      onClick={()=>{
-        submit().then((r)=>{
-
-        })
-        .catch((error) => {
-          console.error(error)
-        })
-      }}>SUBMIT</div>
+      <button className="rounded bg-main text-white py-2 px-6 hover:bg-main-700 cursor-pointer font-500">SUBMIT</button>
     </div>
-  </>)
+  </form>)
 }
 
 

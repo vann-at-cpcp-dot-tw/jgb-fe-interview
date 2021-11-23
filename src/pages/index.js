@@ -47,6 +47,7 @@ export default function Home(){
   const [htmlForm, setHtmlForm] = React.useState({})
   const [cssForm, setCssForm] = React.useState({})
   const [jsForm, setJsForm] = React.useState({})
+  const [showResultScreen, setShowResultScreen] = React.useState(false)
 
   async function submit(){
     setIsLoading(true)
@@ -59,6 +60,7 @@ export default function Home(){
     })
 
     setIsLoading(false)
+    setShowResultScreen(true)
 
     return result
 
@@ -71,6 +73,20 @@ export default function Home(){
   return (<>
     <div className={`w-full h-full left-0 top-0 fixed z-50 flex justify-center items-center text-white text-[21px] ${isLoading ?'block' :'hidden'}`} style={{ background:'rgba(0,0,0,0.8)' }}>
       ....NOW LOADING...
+    </div>
+    <div className={`w-full h-full left-0 top-0 fixed z-50 flex flex-col flex-nowrap justify-center bg-white px-20 ${showResultScreen ?'block' :'hidden'}`}>
+      <div className="pl-5" style={{borderLeft: 'solid 3px #da3932'}}>
+        <img className="relative" src="assets/img/logo.svg" style={{width:'40px', top:'-4px'}}/>
+        <div className="text-[21px] mb-4">THANK YOU</div>
+        <div>
+          <div className="text-[13px] text-grey-600">contact@jgbsmart.com</div>
+          <div className="text-[13px] text-grey-600">+886 2 7730 5580</div>
+          <div className="text-[13px] text-grey-600 mb-4">114 臺北市內湖區瑞光路335號8樓 (宏匯瑞光廣場B棟)</div>
+          <div className="text-main-500 font-500">
+            <a href="https://www.jgbsmart.com/">回首頁</a>
+          </div>
+        </div>
+      </div>
     </div>
     <div className="container my-8">
       <div className="row row-gap-0 items-center">

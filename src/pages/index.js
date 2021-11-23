@@ -19,14 +19,59 @@ const { Layout, Lightbox, Icon, RatioArea, Editor } = components
 
 import { CopyBlock, monokaiSublime } from "react-code-blocks"
 
+import dayjs from 'dayjs'
+
+
+import { initializeApp } from "firebase/app"
+import { getDatabase, ref, set } from "firebase/database"
+import React from 'react'
+
+const firebaseApp = initializeApp({
+  // apiKey: "apiKey",
+  // authDomain: "projectId.firebaseapp.com",
+  // For databases not in the us-central1 location, databaseURL will be of the
+  // form https://[databaseName].[region].firebasedatabase.app.
+  // For example, https://your-database-123.europe-west1.firebasedatabase.app
+  databaseURL: "https://jgb-frontend-interview-default-rtdb.asia-southeast1.firebasedatabase.app/",
+  // storageBucket: "bucket.appspot.com"
+})
+
+const db = getDatabase(firebaseApp)
 
 
 export default function Home(){
   const store = useStore()
   const winSize = useWindowSize()
   const router = useRouter()
+  const [isLoading, setIsLoading] = React.useState(false)
+  const [htmlForm, setHtmlForm] = React.useState({})
+  const [cssForm, setCssForm] = React.useState({})
+  const [jsForm, setJsForm] = React.useState({})
+
+  async function submit(){
+    setIsLoading(true)
+
+    const result = await set(ref(db, 'interviews/'), {
+      DATE: dayjs().format('YYYY/MM/DD HH:mm:ss'),
+      html: htmlForm,
+      css: cssForm,
+      js: jsForm,
+    })
+
+    setIsLoading(false)
+
+    return result
+
+  }
+
+  React.useEffect(()=>{
+    window.dayjs = dayjs
+  }, [])
 
   return (<>
+    <div className={`w-full h-full left-0 top-0 fixed z-50 flex justify-center items-center text-white text-[21px] ${isLoading ?'block' :'hidden'}`} style={{ background:'rgba(0,0,0,0.8)' }}>
+      ....NOW LOADING...
+    </div>
     <div className="container my-8">
       <div className="row row-gap-0 items-center">
         <div className="col-auto">
@@ -53,7 +98,13 @@ export default function Home(){
             <div className="pl-4">
               <Editor
                 onData={(e)=>{
-                  console.log(e?.blocks)
+                  setHtmlForm({
+                    ...htmlForm,
+                    [node_i]: {
+                      title: node?.title,
+                      blocks: e?.blocks?.map((node)=>node?.data),
+                    }
+                  })
                 }}
               />
             </div>
@@ -84,7 +135,13 @@ export default function Home(){
             <div className="pl-4">
               <Editor
                 onData={(e)=>{
-                  console.log(e?.blocks)
+                  setCssForm({
+                    ...cssForm,
+                    [node_i]: {
+                      title: node?.title,
+                      blocks: e?.blocks?.map((node)=>node?.data),
+                    }
+                  })
                 }}
               />
             </div>
@@ -186,7 +243,13 @@ export default function Home(){
               }
               <Editor
                 onData={(e)=>{
-                  console.log(e?.blocks)
+                  setJsForm({
+                    ...jsForm,
+                    [node_i]: {
+                      title: node?.title,
+                      blocks: e?.blocks?.map((node)=>node?.data),
+                    }
+                  })
                 }}
               />
             </div>
@@ -196,7 +259,15 @@ export default function Home(){
     }
 
     <div className="flex justify-center pb-8">
-      <div className="rounded bg-main text-white py-2 px-6 hover:bg-main-700 cursor-pointer font-500">SUBMIT</div>
+      <div className="rounded bg-main text-white py-2 px-6 hover:bg-main-700 cursor-pointer font-500"
+      onClick={()=>{
+        submit().then((r)=>{
+
+        })
+        .catch((error) => {
+          console.error(error)
+        })
+      }}>SUBMIT</div>
     </div>
   </>)
 }

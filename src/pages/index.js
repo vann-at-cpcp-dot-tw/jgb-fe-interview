@@ -105,7 +105,9 @@ export default function Home(){
               <img src="assets/img/logo.svg"/>
             </div>
           </div>
-          <h1 className="text-[24px] font-500 pl-2">JGB 前端技能調查</h1>
+          <div className="col">
+            <h1 className="text-[24px] font-500 pl-2">JGB 前端技能調查</h1>
+          </div>
         </div>
       </div>
 
@@ -133,16 +135,17 @@ export default function Home(){
             <div className="mb-2">{node_i+1}. { node?.title }</div>
             <div className="pl-4">
               <Editor
-                onData={(e)=>{
-                  setHtmlForm({
-                    ...htmlForm,
+              onData={(e)=>{
+                setHtmlForm((preData)=>{
+                  return {
+                    ...preData,
                     [node_i]: {
                       title: node?.title,
                       blocks: e?.blocks?.map((node)=>node?.data),
                     }
-                  })
-                }}
-              />
+                  }
+                })
+              }}/>
             </div>
           </div>
         )
@@ -169,16 +172,17 @@ export default function Home(){
             <div className="mb-2">{node_i+1}. { node?.title }</div>
             <div className="pl-4">
               <Editor
-                onData={(e)=>{
-                  setCssForm({
-                    ...cssForm,
+              onData={(e)=>{
+                setCssForm((preData)=>{
+                  return {
+                    ...preData,
                     [node_i]: {
                       title: node?.title,
                       blocks: e?.blocks?.map((node)=>node?.data),
                     }
-                  })
-                }}
-              />
+                  }
+                })
+              }}/>
             </div>
           </div>
         )
@@ -277,16 +281,17 @@ export default function Home(){
                 :null
               }
               <Editor
-                onData={(e)=>{
-                  setJsForm({
-                    ...jsForm,
+              onData={(e)=>{
+                setJsForm((preData)=>{
+                  return {
+                    ...preData,
                     [node_i]: {
                       title: node?.title,
                       blocks: e?.blocks?.map((node)=>node?.data),
                     }
-                  })
-                }}
-              />
+                  }
+                })
+              }}/>
             </div>
           </div>
         )

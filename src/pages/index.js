@@ -258,7 +258,7 @@ export default function Home(){
             }
           }
 
-          var baz = foo.logThis
+          var baz = bar.logThis
           `,
         },
       ].map((node, node_i)=>{
